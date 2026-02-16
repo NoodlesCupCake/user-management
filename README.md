@@ -22,36 +22,39 @@ A full-stack user management application for learning **Next.js App Router**, **
 
 ## Quick Start (Local Development)
 
-### 1. Start PocketBase
+This project uses **Turborepo** to manage both the backend and frontend.
+
+### 1. Initial Setup
 
 ```bash
-cd pocketbase
-# Download PocketBase if not already present (Windows):
-# Invoke-WebRequest -Uri "https://github.com/pocketbase/pocketbase/releases/download/v0.25.9/pocketbase_0.25.9_windows_amd64.zip" -OutFile "pocketbase.zip"
-# Expand-Archive pocketbase.zip -DestinationPath . -Force
-
-./pocketbase serve
+# Install dependencies for all workspaces
+npm install
 ```
 
-Migrations in `pb_migrations/` will apply automatically. Admin UI at http://127.0.0.1:8090/_/
-
-**Default superuser:** `admin@example.com` / `admin12345678`
-
-### 2. Start Frontend
+### 2. Run Everything
 
 ```bash
-cd frontend
-npm install
+# Starts both PocketBase and Next.js concurrently
 npm run dev
 ```
 
-Open http://localhost:3000
+- Frontend: http://localhost:3000
+- PocketBase: http://127.0.0.1:8090
+- Admin UI: http://127.0.0.1:8090/_/
 
-## Docker Compose
+**Default superuser:** `admin@example.com` / `admin12345678`
+
+## Docker Compose (Production Setup)
+
+The production setup includes an **Nginx** reverse proxy as a gateway.
 
 ```bash
 docker compose up --build
 ```
+
+- **Gateway/App**: [http://localhost](http://localhost) (Proxies to Frontend)
+- **API**: [http://localhost/api/](http://localhost/api/) (Proxies to PocketBase API)
+- **Admin**: [http://localhost/_/](http://localhost/_/) (Proxies to PocketBase Dashboard)
 
 - Frontend: http://localhost:3000
 - PocketBase API: http://localhost:8090
