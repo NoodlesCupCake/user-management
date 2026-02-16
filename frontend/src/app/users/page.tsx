@@ -1,16 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import UserCard from "@/components/UserCard";
 import Link from "next/link";
 
 export default function UsersPage() {
     const [search, setSearch] = useState("");
-    const [committedSearch, setCommittedSearch] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
+
+    // Debounce search input
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search.trim());
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [search]);
 
     // TanStack Query: fetch users with optional search filter
-    const { data: users, isLoading, isError, error } = useUsers(committedSearch);
+    const { data: users, isLoading, isError, error } = useUsers(debouncedSearch);
 
     return (
         <div className="space-y-8">
@@ -59,12 +68,7 @@ export default function UsersPage() {
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            setCommittedSearch(search.trim());
-                        }
-                    }}
-                    placeholder="Search by name, email, or role (press Enter)..."
+                    placeholder="Search by name, email, or role..."
                     className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder-gray-500 outline-none transition-all focus:border-violet-500/50 focus:bg-white/10 focus:ring-2 focus:ring-violet-500/20"
                 />
                 {users && (

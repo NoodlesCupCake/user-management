@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import HelloCsv from "hello-csv/react";
+import "hello-csv/react/index.css";
 import { useBulkCreateUsers } from "@/hooks/useUsers";
 import type { PersonCreate } from "@/lib/types";
 

@@ -23,20 +23,61 @@ body {
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(139, 92, 246, 0.3);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(139, 92, 246, 0.5);
 }
 
-/* hello-csv overrides for dark theme */
-.hello-csv-portal {
+/* hello-csv overrides for a premium dark theme */
+:root {
+  --hc-primary: #8b5cf6;
+  --hc-primary-hover: #7c3aed;
   --hc-bg: #111827;
-  --hc-border: rgba(255, 255, 255, 0.1);
+  --hc-surface: #1f2937;
+  --hc-border: rgba(255, 255, 255, 0.08);
   --hc-text: #f3f4f6;
+  --hc-text-muted: #9ca3af;
+  --hc-radius: 12px;
+}
+
+.hello-csv-portal {
+  font-family: inherit !important;
+}
+
+.hello-csv-portal [data-hc-component="modal"] {
+  background-color: var(--hc-bg) !important;
+  border: 1px solid var(--hc-border) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.hello-csv-portal [data-hc-component="button-primary"] {
+  background: linear-gradient(to right, #7c3aed, #6366f1) !important;
+  border: none !important;
+  font-weight: 600 !important;
+  transition: all 0.2s !important;
+}
+
+.hello-csv-portal [data-hc-component="button-primary"]:hover {
+  filter: brightness(1.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+.hello-csv-portal [data-hc-component="dropzone"] {
+  border: 2px dashed var(--hc-border) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  transition: all 0.3s ease !important;
+}
+
+.hello-csv-portal [data-hc-component="dropzone"]:hover {
+  border-color: var(--hc-primary) !important;
+  background: rgba(139, 92, 246, 0.05) !important;
 }
