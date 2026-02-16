@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import UserCard from "@/components/UserCard";
 import Link from "next/link";
+import pb from "@/lib/pocketbase";
 
 export default function UsersPage() {
     const [search, setSearch] = useState("");
@@ -97,9 +98,9 @@ export default function UsersPage() {
                         {error instanceof Error ? error.message : "Unknown error"}
                     </p>
                     <p className="mt-2 text-sm text-gray-400">
-                        Make sure PocketBase is running at{" "}
-                        <code className="rounded bg-white/10 px-2 py-0.5 text-xs">
-                            http://127.0.0.1:8090
+                        Attempted to reach PocketBase at:{" "}
+                        <code className="rounded bg-white/10 px-2 py-0.5 text-xs text-violet-300">
+                            {pb.baseUrl}
                         </code>
                     </p>
                 </div>
