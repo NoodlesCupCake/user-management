@@ -1,7 +1,5 @@
-"use client";
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import pb from "@/lib/pocketbase";
+import { userService } from "@/services/userService";
 import type { Person, PersonCreate, PersonUpdate } from "@/lib/types";
 
 // ─── Query Keys ────────────────────────────────────────────────
@@ -15,18 +13,7 @@ export const userKeys = {
 export function useUsers(search?: string) {
     return useQuery({
         queryKey: userKeys.list(search),
-        queryFn: async (): Promise<Person[]> => {
-            const filter = search
-                ? `name ~ "${search}" || email ~ "${search}" || role ~ "${search}"`
-                : "";
-
-            const records = await pb.collection("people").getFullList<Person>({
-                sort: "-created",
-                filter,
-            });
-
-            return records;
-        },
+        queryFn: () => userService.getUsers(search),
     });
 }
 
@@ -34,13 +21,7 @@ export function useUsers(search?: string) {
 export function useUser(slug: string) {
     return useQuery({
         queryKey: userKeys.detail(slug),
-        queryFn: async (): Promise<Person> => {
-            const record = await pb
-                .collection("people")
-                .getFirstListItem<Person>(`slug = "${slug}"`);
-
-            return record;
-        },
+        queryFn: () => userService.getUserBySlug(slug),
         enabled: !!slug,
     });
 }
@@ -50,9 +31,7 @@ export function useCreateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (data: PersonCreate): Promise<Person> => {
-            return await pb.collection("people").create<Person>(data);
-        },
+        mutationFn: (data: PersonCreate) => userService.createUser(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
@@ -64,15 +43,13 @@ export function useUpdateUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({
+        mutationFn: ({
             id,
             data,
         }: {
             id: string;
             data: PersonUpdate;
-        }): Promise<Person> => {
-            return await pb.collection("people").update<Person>(id, data);
-        },
+        }) => userService.updateUser(id, data),
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
             // Also invalidate the specific user detail if slug is known
@@ -90,9 +67,7 @@ export function useDeleteUser() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (id: string): Promise<boolean> => {
-            return await pb.collection("people").delete(id);
-        },
+        mutationFn: (id: string) => userService.deleteUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
@@ -104,18 +79,7 @@ export function useBulkCreateUsers() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (users: PersonCreate[]): Promise<Person[]> => {
-            const results: Person[] = [];
-            for (const user of users) {
-                try {
-                    const record = await pb.collection("people").create<Person>(user);
-                    results.push(record);
-                } catch (error) {
-                    console.error(`Failed to create user ${user.email}:`, error);
-                }
-            }
-            return results;
-        },
+        mutationFn: (users: PersonCreate[]) => userService.bulkCreateUsers(users),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },

@@ -109,17 +109,7 @@ export default function ImportPage() {
 
             {/* hello-csv Importer */}
             {!importResult && (
-                <div className="rounded-2xl border border-white/10 bg-gray-900/50 p-8 backdrop-blur-sm">
-                    <div className="mb-6">
-                        <h2 className="text-lg font-semibold text-white">
-                            CSV File Upload
-                        </h2>
-                        <p className="mt-1 text-sm text-gray-400">
-                            Your CSV should contain columns for name, email, and optionally
-                            role, phone, slug, and status.
-                        </p>
-                    </div>
-
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900/50 backdrop-blur-sm shadow-2xl">
                     <HelloCsv
                         sheets={[
                             {
@@ -129,46 +119,34 @@ export default function ImportPage() {
                                     {
                                         id: "name",
                                         label: "Full Name",
-                                        type: "string" as const,
-                                        validators: [
-                                            {
-                                                validate: "required" as const,
-                                            },
-                                        ],
+                                        type: "string",
+                                        validators: [{ validate: "required" }],
                                     },
                                     {
                                         id: "email",
                                         label: "Email Address",
-                                        type: "string" as const,
-                                        validators: [
-                                            {
-                                                validate: "required" as const,
-                                            },
-                                        ],
+                                        type: "string",
+                                        validators: [{ validate: "required" }, { validate: "email" }],
                                     },
                                     {
                                         id: "role",
                                         label: "Role",
-                                        type: "string" as const,
-                                        validators: [],
+                                        type: "string",
                                     },
                                     {
                                         id: "phone",
                                         label: "Phone",
-                                        type: "string" as const,
-                                        validators: [],
+                                        type: "string",
                                     },
                                     {
                                         id: "slug",
-                                        label: "Slug (auto-generated if empty)",
-                                        type: "string" as const,
-                                        validators: [],
+                                        label: "Slug",
+                                        type: "string",
                                     },
                                     {
                                         id: "status",
-                                        label: "Status (active/inactive)",
-                                        type: "string" as const,
-                                        validators: [],
+                                        label: "Status",
+                                        type: "string",
                                     },
                                 ],
                             },
@@ -178,30 +156,56 @@ export default function ImportPage() {
 
                     {/* Loading state during import */}
                     {bulkCreate.isPending && (
-                        <div className="mt-6 flex items-center gap-3 rounded-xl bg-violet-500/10 p-4">
-                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
-                            <span className="text-sm text-violet-300">
-                                Importing users... please wait
-                            </span>
+                        <div className="flex items-center justify-center border-t border-white/5 bg-violet-500/5 p-6 backdrop-blur-md">
+                            <div className="flex items-center gap-3">
+                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
+                                <span className="text-sm font-medium text-violet-300">
+                                    Processing users... please wait
+                                </span>
+                            </div>
                         </div>
                     )}
+                </div>
+            )}
 
-                    {/* CSV Format Guide */}
-                    <div className="mt-8 rounded-xl border border-white/5 bg-white/5 p-6">
-                        <h3 className="text-sm font-semibold text-gray-300">
-                            📋 Expected CSV Format
+            {/* CSV Format Guide - Collapsible or simpler */}
+            {!importResult && (
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                        <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
+                            <span>📋</span> Expected CSV Format
                         </h3>
-                        <div className="mt-3 overflow-x-auto">
-                            <pre className="text-xs text-gray-400">
-                                {`name,email,role,phone,slug,status
-John Doe,john@example.com,member,+1-555-0100,john-doe,active
-Jane Smith,jane@example.com,admin,+1-555-0200,jane-smith,active`}
+                        <p className="mt-2 text-xs text-gray-400">
+                            Your CSV must include <strong>name</strong> and <strong>email</strong>.
+                            Other fields like role, phone, and status are optional.
+                        </p>
+                        <div className="mt-4 overflow-x-auto rounded-lg bg-black/40 p-4">
+                            <pre className="text-[10px] leading-relaxed text-gray-400">
+                                {`name,email,role,phone,status
+John Doe,john@example.com,member,+1-555-0100,active
+Jane Smith,jane@example.com,admin,+1-555-0200,active`}
                             </pre>
                         </div>
-                        <p className="mt-3 text-xs text-gray-500">
-                            Only <strong>name</strong> and <strong>email</strong> are
-                            required. Other fields will use default values if omitted.
-                        </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                        <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
+                            <span>💡</span> Pro Tips
+                        </h3>
+                        <ul className="mt-3 space-y-2 text-xs text-gray-400">
+                            <li className="flex gap-2">
+                                <span className="text-violet-400">•</span>
+                                <span>Slugs are auto-generated from names if missing.</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="text-violet-400">•</span>
+                                <span>Valid roles: admin, manager, member, viewer.</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="text-violet-400">•</span>
+                                <span>Default status is "active".</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             )}
