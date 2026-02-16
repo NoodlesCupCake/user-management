@@ -75,7 +75,7 @@ export default function ImportPage() {
 
             {/* Success Result */}
             {importResult && (
-                <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-8 shadow-2xl shadow-emerald-500/10 transition-all hover:bg-emerald-500/15">
+                <div className="rounded-[px] border border-emerald-500/20 bg-emerald-500/10 p-5 shadow-2xl shadow-emerald-500/10 transition-all hover:bg-emerald-500/15">
                     <div className="flex items-start gap-5">
                         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-3xl">
                             ✅
@@ -109,8 +109,8 @@ export default function ImportPage() {
 
             {/* hello-csv Importer Container */}
             {!importResult && (
-                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gray-900/40 p-1 shadow-2xl backdrop-blur-xl">
-                    <div className="border-b border-white/5 bg-white/5 p-8">
+                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gray-900/40 p-2 shadow-2xl backdrop-blur-xl">
+                    <div className="border-b border-white/5 bg-white/5 rounded-2xl p-5">
                         <div className="flex items-center gap-4">
                             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/15 text-2xl shadow-inner">
                                 🚀
@@ -122,7 +122,7 @@ export default function ImportPage() {
                         </div>
                     </div>
 
-                    <div className="bg-black/20 p-2">
+                    <div className="bg-black/20 p-6 mt-4 bg-white rounded-xl">
                         <HelloCsv
                             sheets={[
                                 {
