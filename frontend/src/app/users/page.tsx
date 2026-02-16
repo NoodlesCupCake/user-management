@@ -7,20 +7,10 @@ import Link from "next/link";
 
 export default function UsersPage() {
     const [search, setSearch] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
-
-    // Debounce search input
-    const handleSearch = (value: string) => {
-        setSearch(value);
-        // Simple debounce with timeout
-        const timer = setTimeout(() => {
-            setDebouncedSearch(value);
-        }, 300);
-        return () => clearTimeout(timer);
-    };
+    const [committedSearch, setCommittedSearch] = useState("");
 
     // TanStack Query: fetch users with optional search filter
-    const { data: users, isLoading, isError, error } = useUsers(debouncedSearch);
+    const { data: users, isLoading, isError, error } = useUsers(committedSearch);
 
     return (
         <div className="space-y-8">
@@ -68,8 +58,13 @@ export default function UsersPage() {
                 <input
                     type="text"
                     value={search}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    placeholder="Search by name, email, or role..."
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            setCommittedSearch(search.trim());
+                        }
+                    }}
+                    placeholder="Search by name, email, or role (press Enter)..."
                     className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder-gray-500 outline-none transition-all focus:border-violet-500/50 focus:bg-white/10 focus:ring-2 focus:ring-violet-500/20"
                 />
                 {users && (
