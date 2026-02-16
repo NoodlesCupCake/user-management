@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: userhub-pocketbase
     ports:
-      - "8090:8090"
+      - "8091:8090"
     volumes:
       - pb_data:/pb/pb_data
     restart: unless-stopped
