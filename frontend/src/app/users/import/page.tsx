@@ -27,8 +27,6 @@ export default function ImportPage() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleComplete = async (state: any) => {
-        // hello-csv provides state.sheetData as SheetState[]
-        // Each SheetState has { sheetId, rows } where rows is SheetRow[]
         const sheetData = state.sheetData || [];
         const allRows: Record<string, string>[] = sheetData.flatMap(
             (sheet: { rows: Record<string, string>[] }) => sheet.rows || []
@@ -55,161 +53,201 @@ export default function ImportPage() {
     };
 
     return (
-        <div className="space-y-8">
-            {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-sm text-gray-400">
-                <Link href="/users" className="hover:text-white transition-colors">
-                    Users
-                </Link>
-                <span>/</span>
-                <span className="text-white">Import CSV</span>
-            </nav>
-
-            {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight text-white">
-                    Import Users from CSV
-                </h1>
-                <p className="mt-2 text-gray-400">
-                    Upload a CSV file to bulk-create users. Map your columns to the
-                    required fields.
-                </p>
+        <div className="space-y-10">
+            {/* Breadcrumb & Header */}
+            <div className="space-y-4">
+                <nav className="flex items-center gap-2 text-sm text-gray-400">
+                    <Link href="/users" className="hover:text-white transition-colors">
+                        Users
+                    </Link>
+                    <span>/</span>
+                    <span className="text-white">Import CSV</span>
+                </nav>
+                <div>
+                    <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+                        Import Users
+                    </h1>
+                    <p className="mt-3 text-lg text-gray-400">
+                        Easily bulk-create users by uploading a CSV file and mapping your columns.
+                    </p>
+                </div>
             </div>
 
             {/* Success Result */}
             {importResult && (
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-6">
-                    <div className="flex items-center gap-3">
-                        <div className="text-3xl">✅</div>
-                        <div>
-                            <h3 className="text-lg font-semibold text-emerald-400">
+                <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-8 shadow-2xl shadow-emerald-500/10 transition-all hover:bg-emerald-500/15">
+                    <div className="flex items-start gap-5">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-3xl">
+                            ✅
+                        </div>
+                        <div className="space-y-1">
+                            <h3 className="text-xl font-bold text-emerald-400">
                                 Import Complete!
                             </h3>
-                            <p className="text-emerald-300/80">
-                                Successfully imported {importResult.success} of{" "}
-                                {importResult.total} users.
+                            <p className="text-emerald-300/70">
+                                We've successfully processed <strong>{importResult.success}</strong> of{" "}
+                                <strong>{importResult.total}</strong> users from your file.
                             </p>
                         </div>
                     </div>
-                    <div className="mt-4 flex gap-3">
+                    <div className="mt-8 flex flex-wrap gap-4">
                         <button
                             onClick={() => router.push("/users")}
-                            className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-emerald-500"
+                            className="rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-emerald-500 hover:shadow-emerald-500/20 active:scale-95"
                         >
-                            View Users
+                            View All Users
                         </button>
                         <button
                             onClick={() => setImportResult(null)}
-                            className="rounded-xl border border-white/10 px-5 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-white/5"
+                            className="rounded-2xl border border-white/10 bg-white/5 px-8 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 active:scale-95"
                         >
-                            Import More
+                            Import More Data
                         </button>
                     </div>
                 </div>
             )}
 
-            {/* hello-csv Importer */}
+            {/* hello-csv Importer Container */}
             {!importResult && (
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900/50 backdrop-blur-sm shadow-2xl">
-                    <HelloCsv
-                        sheets={[
-                            {
-                                id: "users",
-                                label: "Users",
-                                columns: [
-                                    {
-                                        id: "name",
-                                        label: "Full Name",
-                                        type: "string",
-                                        validators: [{ validate: "required" }],
-                                    },
-                                    {
-                                        id: "email",
-                                        label: "Email Address",
-                                        type: "string",
-                                        validators: [{ validate: "required" }, { validate: "email" }],
-                                    },
-                                    {
-                                        id: "role",
-                                        label: "Role",
-                                        type: "string",
-                                    },
-                                    {
-                                        id: "phone",
-                                        label: "Phone",
-                                        type: "string",
-                                    },
-                                    {
-                                        id: "slug",
-                                        label: "Slug",
-                                        type: "string",
-                                    },
-                                    {
-                                        id: "status",
-                                        label: "Status",
-                                        type: "string",
-                                    },
-                                ],
-                            },
-                        ]}
-                        onComplete={handleComplete}
-                    />
-
-                    {/* Loading state during import */}
-                    {bulkCreate.isPending && (
-                        <div className="flex items-center justify-center border-t border-white/5 bg-violet-500/5 p-6 backdrop-blur-md">
-                            <div className="flex items-center gap-3">
-                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
-                                <span className="text-sm font-medium text-violet-300">
-                                    Processing users... please wait
-                                </span>
+                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gray-900/40 p-1 shadow-2xl backdrop-blur-xl">
+                    <div className="border-b border-white/5 bg-white/5 p-8">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/15 text-2xl shadow-inner">
+                                🚀
                             </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-white">Data Mapping Engine</h2>
+                                <p className="text-sm text-gray-500">Pick a file to match your source data to our schema.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-black/20 p-2">
+                        <HelloCsv
+                            sheets={[
+                                {
+                                    id: "users",
+                                    label: "Users",
+                                    columns: [
+                                        {
+                                            id: "name",
+                                            label: "Full Name",
+                                            type: "string",
+                                            validators: [{ validate: "required" }],
+                                        },
+                                        {
+                                            id: "email",
+                                            label: "Email Address",
+                                            type: "string",
+                                            validators: [
+                                                { validate: "required" },
+                                                { validate: "email" }
+                                            ],
+                                        },
+                                        {
+                                            id: "role",
+                                            label: "User Role",
+                                            type: "string",
+                                        },
+                                        {
+                                            id: "phone",
+                                            label: "Phone Number",
+                                            type: "string",
+                                        },
+                                        {
+                                            id: "slug",
+                                            label: "Unique Slug",
+                                            type: "string",
+                                        },
+                                        {
+                                            id: "status",
+                                            label: "Account Status",
+                                            type: "string",
+                                        },
+                                    ],
+                                },
+                            ]}
+                            onComplete={handleComplete}
+                        />
+                    </div>
+
+                    {/* Infinite Progress Bar - decorative */}
+                    {bulkCreate.isPending && (
+                        <div className="absolute bottom-0 left-0 h-1.5 w-full overflow-hidden bg-violet-950/20">
+                            <div className="h-full w-1/3 animate-[loading_1.5s_infinite_linear] bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
                         </div>
                     )}
                 </div>
             )}
 
-            {/* CSV Format Guide - Collapsible or simpler */}
+            {/* Supplemental Guides */}
             {!importResult && (
-                <div className="grid gap-6 md:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                        <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
-                            <span>📋</span> Expected CSV Format
-                        </h3>
-                        <p className="mt-2 text-xs text-gray-400">
-                            Your CSV must include <strong>name</strong> and <strong>email</strong>.
-                            Other fields like role, phone, and status are optional.
-                        </p>
-                        <div className="mt-4 overflow-x-auto rounded-lg bg-black/40 p-4">
-                            <pre className="text-[10px] leading-relaxed text-gray-400">
+                <div className="grid gap-10 lg:grid-cols-2">
+                    <div className="group rounded-3xl border border-white/10 bg-white/5 p-10 backdrop-blur-sm transition-all hover:bg-white/[0.08]">
+                        <div className="mb-8 flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/15 text-2xl transition-transform group-hover:scale-110">
+                                📋
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-white">Golden Format</h3>
+                                <p className="text-sm text-gray-500">Best headers for auto-matching</p>
+                            </div>
+                        </div>
+                        <div className="overflow-hidden rounded-2xl bg-black/40 border border-white/5 shadow-2xl">
+                            <div className="flex items-center justify-between bg-white/5 px-5 py-3 border-b border-white/5">
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">example_data.csv</span>
+                                <div className="flex gap-1.5">
+                                    <div className="h-2 w-2 rounded-full bg-red-500/50" />
+                                    <div className="h-2 w-2 rounded-full bg-amber-500/50" />
+                                    <div className="h-2 w-2 rounded-full bg-emerald-500/50" />
+                                </div>
+                            </div>
+                            <pre className="p-6 text-xs font-mono leading-relaxed text-indigo-300/80">
                                 {`name,email,role,phone,status
-John Doe,john@example.com,member,+1-555-0100,active
-Jane Smith,jane@example.com,admin,+1-555-0200,active`}
+"Anya Taylor","anya@example.com","admin","+1-555...","active"
+"Marcus Wright","marcus@example.com","member","+1-555...","active"
+"Sana Minato","sana@example.com","viewer","+81-3...","inactive"`}
                             </pre>
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                        <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
-                            <span>💡</span> Pro Tips
-                        </h3>
-                        <ul className="mt-3 space-y-2 text-xs text-gray-400">
-                            <li className="flex gap-2">
-                                <span className="text-violet-400">•</span>
-                                <span>Slugs are auto-generated from names if missing.</span>
-                            </li>
-                            <li className="flex gap-2">
-                                <span className="text-violet-400">•</span>
-                                <span>Valid roles: admin, manager, member, viewer.</span>
-                            </li>
-                            <li className="flex gap-2">
-                                <span className="text-violet-400">•</span>
-                                <span>Default status is "active".</span>
-                            </li>
-                        </ul>
+                    <div className="group rounded-3xl border border-white/10 bg-white/5 p-10 backdrop-blur-sm transition-all hover:bg-white/[0.08]">
+                        <div className="mb-8 flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 text-2xl transition-transform group-hover:scale-110">
+                                💡
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-white">Smart Processing</h3>
+                                <p className="text-sm text-gray-500">How we handle your data</p>
+                            </div>
+                        </div>
+                        <div className="space-y-8">
+                            {[
+                                { title: "Intelligent Slugs", text: "We transform names like 'John Doe' into 'john-doe' if a slug isn't provided." },
+                                { title: "Safe Defaults", text: "Roles and statuses are validated. Unknown values default to 'member' and 'active'." },
+                                { title: "Auto-Avatars", text: "Missing avatars are instantly generated using the DiceBear platform." }
+                            ].map((tip, i) => (
+                                <div key={i} className="flex gap-5">
+                                    <div className="mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-emerald-500/20 text-xs font-black text-emerald-400">
+                                        {i + 1}
+                                    </div>
+                                    <div>
+                                        <h4 className="text-base font-bold text-gray-200">{tip.title}</h4>
+                                        <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{tip.text}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
+
+            <style jsx>{`
+                @keyframes loading {
+                    from { transform: translateX(-100%); }
+                    to { transform: translateX(300%); }
+                }
+            `}</style>
         </div>
     );
 }
