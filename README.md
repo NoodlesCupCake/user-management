@@ -54,7 +54,9 @@ docker compose up --build
 
 - **Gateway/App**: [http://localhost](http://localhost) (Proxies to Frontend)
 - **API**: [http://localhost/api/](http://localhost/api/) (Proxies to PocketBase API)
-- **Admin**: [http://localhost/_/](http://localhost/_/) (Proxies to PocketBase Dashboard)
+- **Admin**: [http://localhost/_/](http://localhost/_/) or [http://localhost/_admin/](http://localhost/_admin/)
+
+**Note**: In Docker mode, the frontend is configured to talk to PocketBase via the gateway.
 
 - Frontend: http://localhost:3000
 - PocketBase API: http://localhost:8090

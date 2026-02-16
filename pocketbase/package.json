@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "pocketbase.exe serve",
-        "start": "pocketbase.exe serve"
+        "dev": ".\\pocketbase.exe serve",
+        "start": ".\\pocketbase.exe serve"
     }
 }
